@@ -176,18 +176,8 @@ button:focus {
   font-weight: bold;
   cursor: pointer;
 }
-/* ===== Hammer Style ===== */
-img[alt="Hammer"] {
-  transition: transform 0.1s ease;
-  animation: hammer-hit 0.2s ease-out;
-  pointer-events: none;
-}
 
-@keyframes hammer-hit {
-  0% {
-    transform: rotate(-45deg) scale(1.2);
-  }
-  100% {
-    transform: rotate(-45deg) scale(1);
-  }
+
+.game-over-modal button:hover {
+  background-color: #ffec7a;
 }

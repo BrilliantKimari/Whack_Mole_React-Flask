@@ -2,56 +2,50 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function Registerpage() {
-  const [username, setUsername] = useState("");
+function Loginpage({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/gamers", { username, email, password });
-      alert("Registration successful!");
-      navigate("/login");
+      const res = await axios.post("/gamers/login", { email, password });
+      localStorage.setItem("loggedInUser", JSON.stringify(res.data.gamer));
+      onLogin(res.data.gamer);
+      alert("Login successful!");
+      navigate("/game");
     } catch (err) {
-      alert(err.response?.data?.error || "Registration failed");
+      alert(err.response?.data?.error || "Login failed");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={styles.form}>
-      <h2>Create Your Character</h2>
+    <form onSubmit={handleLogin} style={styles.form}>
+      <h2>Login</h2>
       <input
-        placeholder="Character Name"
-        required
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        style={styles.input}
-      />
-      <input
-        placeholder="Email"
         type="email"
-        required
+        placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         style={styles.input}
+        required
       />
       <input
-        placeholder="Password"
         type="password"
-        required
+        placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         style={styles.input}
+        required
       />
-      <button type="submit" style={styles.button}>Register</button>
+      <button type="submit" style={styles.button}>Login</button>
       <button
         type="button"
-        style={styles.loginButton}
-        onClick={() => navigate("/login")}
+        style={styles.registerButton}
+        onClick={() => navigate("/")}
       >
-        Already have an account? Login
+        Don't have an account? Register
       </button>
     </form>
   );
@@ -81,15 +75,15 @@ const styles = {
     border: "none",
     borderRadius: "4px"
   },
-  loginButton: {
+  registerButton: {
     padding: "10px 20px",
     fontSize: "14px",
     cursor: "pointer",
-    backgroundColor: "#2196F3",
+    backgroundColor: "#FF9800",
     color: "white",
     border: "none",
     borderRadius: "4px"
   }
 };
 
-export default Registerpage;
+export default Loginpage;
