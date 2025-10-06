@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-function Register() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+function Registerpage() {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const user = { name, email, password };
-    localStorage.setItem('user', JSON.stringify(user));
-    alert('Registration successful!');
-    navigate('/login');
+    try {
+      await axios.post("/gamers", { username, email, password });
+      alert("Registration successful!");
+      navigate("/login");
+    } catch (err) {
+      alert(err.response?.data?.error || "Registration failed");
+    }
   };
 
   return (
@@ -21,8 +25,8 @@ function Register() {
       <input
         placeholder="Character Name"
         required
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
         style={styles.input}
       />
       <input
@@ -42,28 +46,50 @@ function Register() {
         style={styles.input}
       />
       <button type="submit" style={styles.button}>Register</button>
+      <button
+        type="button"
+        style={styles.loginButton}
+        onClick={() => navigate("/login")}
+      >
+        Already have an account? Login
+      </button>
     </form>
   );
 }
 
 const styles = {
   form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
-    width: '300px',
-    margin: '100px auto',
-    textAlign: 'center',
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+    width: "300px",
+    margin: "100px auto",
+    textAlign: "center"
   },
   input: {
-    padding: '10px',
-    fontSize: '14px',
+    padding: "10px",
+    fontSize: "14px",
+    border: "1px solid #ccc",
+    borderRadius: "4px"
   },
   button: {
-    padding: '10px 20px',
-    fontSize: '16px',
-    cursor: 'pointer',
+    padding: "10px 20px",
+    fontSize: "16px",
+    cursor: "pointer",
+    backgroundColor: "#4CAF50",
+    color: "white",
+    border: "none",
+    borderRadius: "4px"
   },
+  loginButton: {
+    padding: "10px 20px",
+    fontSize: "14px",
+    cursor: "pointer",
+    backgroundColor: "#2196F3",
+    color: "white",
+    border: "none",
+    borderRadius: "4px"
+  }
 };
 
-export default Register;
+export default Registerpage;
